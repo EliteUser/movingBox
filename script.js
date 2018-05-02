@@ -1,66 +1,63 @@
+var canvas = document.querySelector("#canvas");
+var ctx = canvas.getContext("2d");
+var width = canvas.width;
+var height = canvas.height;
+
+var directions = {
+  37: "left",
+  38: "up",
+  39: "right",
+  40: "down"
+};
+
 function Box(x, y, color) {
   this.x = x;
   this.y = y;
+  this.width = 50;
+  this.height = 50;
   this.color = color;
+  this.direction = "right";
+  this.speed = 10;
 
   this.drawBox = function () {
-    this.element = document.createElement("div");
-    this.element.classList.add("box");
-    this.element.style.left = this.x + "px";
-    this.element.style.top = this.y + "px";
-    this.element.style.backgroundColor = this.color;
-    document.querySelector("body").appendChild(this.element);
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.x, this.y, this.width, this.height);
   };
 
-  this.moveRight = function (distance) {
-    let dx = 10;
-    if (arguments.length > 0) {
-      dx = distance;
+  this.move = function (direction) {
+    if (direction === "left") {
+      this.x -= this.speed;
+    } else if (direction === "right") {
+      this.x += this.speed;
+    } else if (direction === "up") {
+      this.y -= this.speed;
+    } else if (direction === "down") {
+      this.y += this.speed;
     }
-    this.x += dx;
-    this.element.style.left = this.x + "px";
   };
 
-  this.moveDown = function (distance) {
-    let dy = 10;
-    if (arguments.length > 0) {
-      dy = distance;
+  this.checkCollision = function () {
+    if (this.x > width - this.width) {
+      this.x = width - this.width;
+    } else if (this.x < 0) {
+      this.x = 0;
+    } else if (this.y < 0) {
+      this.y = 0;
+    } else if (this.y > height - this.height) {
+      this.y = height - this.height;
     }
-    this.y += dy;
-    this.element.style.top = this.y + "px";
-  };
-
-  this.moveLeft = function (distance) {
-    let dx = 10;
-    if (arguments.length > 0) {
-      dx = distance;
-    }
-    this.x -= dx;
-    this.element.style.left = this.x + "px";
-  };
-
-  this.moveUp = function (distance) {
-    let dy = 10;
-    if (arguments.length > 0) {
-      dy = distance;
-    }
-    this.y -= dy;
-    this.element.style.top = this.y + "px";
   };
 }
 
 var box1 = new Box(0, 0, "green");
 
 document.addEventListener("keydown", function (evt) {
-  if (evt.keyCode === 39) {
-    box1.moveRight();
-  } else if (evt.keyCode === 37) {
-    box1.moveLeft();
-  } else if (evt.keyCode === 38) {
-    box1.moveUp();
-  } else if (evt.keyCode === 40) {
-    box1.moveDown();
-  }
+  box1.move(directions[evt.keyCode]);
 });
 
-// TODO => canvas
+setInterval(function () {
+  ctx.clearRect(0, 0, width, height);
+
+  box1.checkCollision();
+  box1.drawBox();
+}, 15);

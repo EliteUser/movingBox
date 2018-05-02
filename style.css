@@ -1,6 +1,9 @@
 body {
   position: relative;
   margin: 0;
+}
+
+canvas {
   background-color: #333333;
 }
 
