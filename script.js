@@ -50,7 +50,7 @@ Box.prototype.moveUp = function (distance) {
   this.element.style.top = this.y + "px";
 };
 
-var box1 = new Box(0, 0, "red");
+var box1 = new Box(0, 0, "green");
 
 document.addEventListener("keydown", function (evt) {
   if (evt.keyCode === 39) {
